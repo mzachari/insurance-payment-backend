@@ -62,7 +62,7 @@ exports.loginUser = (req, res, next) => {
     });
 };
 
-exports.getAllFarmers = (req,res,next) =>{
+exports.getAllFarmersDetails = (req,res,next) =>{
   //Returns an array of farmer objects
   farmersQuery = Farmer.find()
     .then(farmers => {
@@ -79,7 +79,7 @@ exports.getAllFarmers = (req,res,next) =>{
     })
 };
 
-exports.getFarmer = (req,res,next) =>{
+exports.getFarmerDetails = (req,res,next) =>{
   //Returns a farmer object based on farmer id
   Farmer.findById(req.params.farmerId).then(farmer => {
     if (farmer) {
@@ -96,3 +96,38 @@ exports.getFarmer = (req,res,next) =>{
       })
     });
 };
+
+exports.editFarmerDetails = (req,res,next)=>{
+  let imagePath = req.body.imagePath;
+  if (req.file) {
+    const url = req.protocol + "://" + req.get("host");
+    imagePath = url + "/images/" + req.file.filename
+  }
+  const farmer = new Farmer({
+    _id: req.params.id,
+    contactNumber: req.body.contactNumber,
+    dateOfBirth: req.body.dateOfBirth,
+    imagePath: imagePath,
+    state:state,
+    district:district
+  });
+
+
+  Farmer.updateOne({_id:req.params.id,email:req.userData.emaAil},farmer).then(result =>{
+    if(result.n>0){
+      res.status(200).json({
+        message: "Update successful!",
+        farmer: result
+      });
+    }
+    else {
+      res.status(401).json({
+        message: "Not Authorized!"
+      });
+    }
+  }).catch((error) => {
+    res.status(500).json({
+      message: "Couldn't update farmer!"
+    })
+  });
+}

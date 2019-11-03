@@ -6,9 +6,9 @@ const checkAuth = require('../middleware/check-auth');
 // const extractFile = require('../middleware/file');
 
 router.post('', checkAuth, farmsController.createFarmerFarm);
-router.get('', farmsController.getAllFarmerFarms );
+router.get('', checkAuth,farmsController.getAllFarmerFarms );
 
-router.get('/:farmId', farmsController.getFarmerFarm)
+router.get('/:farmId', checkAuth,farmsController.getFarmerFarm)
 router.put('/:farmid', checkAuth, farmsController.editFarmerFarm );
 router.delete('/:farmid', checkAuth, farmsController.deleteFarmerFarm );
 
