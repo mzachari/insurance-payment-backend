@@ -1,11 +1,11 @@
 const Farm = require('../models/farm');
 exports.createFarmerFarm = (req, res, next) => {
-  console.log("req");
+  console.log("req", req.body);
   //const url = req.protocol + "://" + req.get("host");
   const farm = new Farm({
-    name: req.body.name,
+    cropType: req.body.cropType,
     location: req.body.location,
-    farmerId: req.body.farmerId
+    farmerId: req.userData.userId
   });
   farm.save().then(result => {
     res.status(201).json({
@@ -17,38 +17,27 @@ exports.createFarmerFarm = (req, res, next) => {
     });
   })
     .catch((error) => {
+      console.log(error);
       res.status(500).json({
-        message: "Couldn't create new post!"
+        message: "Couldn't add new farm!"
       })
     });
 };
-exports.getAllFarmerFarms = (req, res, next) => {
-  // var pageSize = +req.query.pagesize;
-  // var currentPage = +req.query.pages;
-  // let fetchedPosts;
-  // postQuery = Post.find();
-  // if (pageSize && currentPage) {
-  //   postQuery
-  //     .skip(pageSize * (currentPage - 1))
-  //     .limit(pageSize);
-  // }
-  // postQuery
-  //   .then(documents => {
-  //     fetchedPosts = documents;
-  //     return Post.count();
-  //   })
-  //   .then(count => {
-  //     res.status(200).json({
-  //       message: 'Posts fetched Successfully',
-  //       posts: fetchedPosts,
-  //       postCount: count
-  //     });
-  //   })
-  //   .catch((error) => {
-  //     res.status(500).json({
-  //       message: "Couldn't fetch the posts!"
-  //     })
-  //   });
+exports.getAllFarmerFarms = (req, res, next) => 
+{
+  farmsQuery = Farm.find()
+  .then(farms => {
+    res.status(200).json({
+      message: 'Farms fetched Successfully',
+      farms: farms,
+      farmerCount: farms.length
+    })
+  })
+  .catch(err =>{
+      res.status(500).json({
+        message: "Couldn't fetch farms list!"
+    });
+  })
 };
 
  exports.getFarmerFarm = (req, res, next) => {
@@ -100,6 +89,25 @@ exports.editFarmerFarm = (req, res, next) => {
 };
 
 exports.deleteFarmerFarm = (req, res, next) => {
+  // Post.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(result => {
+  //   if (result.n > 0) {
+  //     res.status(200).json({
+  //       message: "Delete successful!",
+  //       post: result
+  //     });
+  //   } else {
+  //     res.status(401).json({
+  //       message: "Not Authorized!"
+  //     });
+  //   }
+  // }).catch((error) => {
+  //   res.status(500).json({
+  //     message: "Couldn't delete post!"
+  //   })
+  // });
+};
+
+exports.addFarmerFarm = (req, res, next) => {
   // Post.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(result => {
   //   if (result.n > 0) {
   //     res.status(200).json({

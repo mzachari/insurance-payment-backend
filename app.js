@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const farmersRoutes = require('./routes/farmers');
 const farmRoutes = require('./routes/farms');
+const cropRoutes = require('./routes/crops');
 
 const app = express();
 mongoose.connect("mongodb://admin:Welcome1@localhost:27017/insurance",{useNewUrlParser: true})
@@ -25,6 +26,8 @@ app.use((req,res,next) =>{
 })
 
 app.use("/api/farmers",farmersRoutes);
-app.use('/api/farmers/:farmerId/farms',farmRoutes);
+app.use('/api/farms',farmRoutes);
+app.use('/api/crops',cropRoutes);
+
 
 module.exports = app;

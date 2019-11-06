@@ -5,10 +5,15 @@ const Farmer = require('../models/farmer');
 exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
-      console.log("User CReated1")
+      console.log(req)
       const farmer = new Farmer({
-        email: req.body.email,
-        password: hash
+        name: req.body.name,
+        contactNumber: req.body.contactNumber,
+        password: hash,
+        email: null,
+        imagePath: null,
+        state: null,
+        district: null
       });
       farmer.save()
         .then(result => {
@@ -18,7 +23,8 @@ exports.createUser = (req, res, next) => {
           });
         })
         .catch(err => {
-          return res.status(401).json({
+          console.log(err);
+          return res.status(500).json({
             message: "Signup Failed"
           });
         })
@@ -27,7 +33,7 @@ exports.createUser = (req, res, next) => {
 
 exports.loginUser = (req, res, next) => {
   let fetchedFarmer;
-  Farmer.findOne({ email: req.body.email })
+  Farmer.findOne({ contactNumber: req.body.contactNumber })
     .then(farmer => {
       if (!farmer) {
         return res.status(401).json({
@@ -44,7 +50,7 @@ exports.loginUser = (req, res, next) => {
         })
       }
       const token = jwt.sign(
-        { email: fetchedFarmer.email, farmerId: fetchedFarmer._id },
+        { contactNumber: fetchedFarmer.contactNumber, userId: fetchedFarmer._id },
         "jahd23k13kjbkYs129898qjhwjasaosaknmshryIjnswkejwem3",
         { expiresIn: "1h" }
       );
@@ -52,7 +58,7 @@ exports.loginUser = (req, res, next) => {
       res.status(200).json({
         token: token,
         expiresIn: 3600,
-        farmerId: fetchedFarmer._id
+        userId: fetchedFarmer._id
       });
     })
     .catch(err => {
@@ -80,10 +86,14 @@ exports.getAllFarmersDetails = (req,res,next) =>{
 };
 
 exports.getFarmerDetails = (req,res,next) =>{
+ // console.log("req.userData",req.userData);
   //Returns a farmer object based on farmer id
-  Farmer.findById(req.params.farmerId).then(farmer => {
+  Farmer.findById(req.userData.userId).then(farmer => {
     if (farmer) {
-      res.status(200).json(farmer);
+      console.log("Request Received", farmer);
+      res.status(200).json({
+        message: 'Farmer Details Fetched Successfully',
+        farmer:farmer});
     } else {
       res.status(404).json({
         message: 'Farmer not found!'
@@ -113,7 +123,7 @@ exports.editFarmerDetails = (req,res,next)=>{
   });
 
 
-  Farmer.updateOne({_id:req.params.id,email:req.userData.emaAil},farmer).then(result =>{
+  Farmer.updateOne({_id:req.params.id,contactNumber:req.userData.contactNumber},farmer).then(result =>{
     if(result.n>0){
       res.status(200).json({
         message: "Update successful!",

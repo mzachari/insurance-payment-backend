@@ -5,9 +5,9 @@ const checkAuth = require('../middleware/check-auth');
 
 router.post('/signup',farmerController.createUser);
 router.post('/login',farmerController.loginUser);
-router.get('', checkAuth,farmerController.getAllFarmersDetails);
-router.get('/:farmerId',checkAuth, farmerController.getFarmerDetails);
-router.put('/:farmerId',checkAuth,farmerController.editFarmerDetails);
+router.get('/all', checkAuth,farmerController.getAllFarmersDetails);
+router.get('',checkAuth, farmerController.getFarmerDetails);
+router.put('',checkAuth,farmerController.editFarmerDetails);
 
 
 module.exports = router;
