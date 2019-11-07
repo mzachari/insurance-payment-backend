@@ -5,7 +5,8 @@ exports.createFarmerFarm = (req, res, next) => {
   const farm = new Farm({
     cropType: req.body.cropType,
     location: req.body.location,
-    farmerId: req.userData.userId
+    farmerId: req.userData.userId,
+    polygonPoints: req.body.polygonPoints
   });
   farm.save().then(result => {
     res.status(201).json({
@@ -23,7 +24,7 @@ exports.createFarmerFarm = (req, res, next) => {
       })
     });
 };
-exports.getAllFarmerFarms = (req, res, next) => 
+exports.getAllFarmerFarms = (req, res, next) =>
 {
   farmsQuery = Farm.find()
   .then(farms => {
