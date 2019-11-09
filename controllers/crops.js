@@ -33,3 +33,18 @@ exports.getAllCrops = (req,res,next) =>{
         });
         })
   };
+
+  exports.addCrops = (req, res, next) => {
+    Crop.insertMany(req.body)
+        .then(result => {
+        res.status(201).json({
+            message: 'Crop Added',
+            result: result
+        });
+        })
+        .catch(err => {
+        return res.status(500).json({
+            message: "Request Failed"
+        });
+        })
+  };

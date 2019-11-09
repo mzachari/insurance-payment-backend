@@ -25,7 +25,7 @@ const pointSchema = new mongoose.Schema({
 });
 
 const farmSchema = mongoose.Schema({
-  location: { type: String, required: true},
+  location: { type: String},
   farmerId: {type:String, required:true},
   cropType: {type:String, required:true},
   insurancePlanId: {type:String},
