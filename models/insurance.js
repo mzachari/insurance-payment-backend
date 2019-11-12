@@ -13,14 +13,17 @@ const polygonSchema = new mongoose.Schema({
 });
 
 const insuranceSchema = mongoose.Schema({
-  premiumPercentage :{type:Number,required:true},
-  insuredAmount : {type:Number,required:true},
-  insurancePlanNumber : {type:String,required:true},
-  insuranceStartDate : { type : Date ,required:true},
-  insuranceEndDate : { type : Date ,required:true},
-  farmId : {type:String, required:true},
+  premiumPercentage :{type:Number,required:function() { return this.isFormComplete === 3; } },
+  insuredAmount : {type:Number,required:function() { return this.isFormComplete === 3; }},
+  insurancePlanNumber : {type:String,required:function() { return this.isFormComplete === 3; }},
+  insuranceStartDate : { type : Date ,required:function() { return this.isFormComplete === 3; }},
+  insuranceEndDate : { type : Date ,required:function() { return this.isFormComplete === 3; }},
+  farmId : {type:String},
   insuredLocation : polygonSchema,
-  insuranceProvider : {type:String,required:true}, // example ICICI Lombard Policy
+  insuranceProvider : {type:String,required:function() { return this.isFormComplete === 3; }}, // example ICICI Lombard Policy
+  isFormComplete : {type:Number},
+  farmerId: {type:String, required:true},
+  imagePath: {type:String}
 
 });
 

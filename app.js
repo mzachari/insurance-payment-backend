@@ -5,9 +5,10 @@ const mongoose = require('mongoose');
 const farmersRoutes = require('./routes/farmers');
 const farmRoutes = require('./routes/farms');
 const cropRoutes = require('./routes/crops');
+const insuranceRoutes = require('./routes/insurance');
 
 const app = express();
-mongoose.connect("mongodb://admin:Welcome1@localhost:27017/insurance",{useNewUrlParser: true})
+mongoose.connect("mongodb://admin:Welcome1@ds343718.mlab.com:43718/insurance-payment",{useNewUrlParser: true})
         .then(() =>{
           console.log('Connected to database!');
         })
@@ -15,7 +16,7 @@ mongoose.connect("mongodb://admin:Welcome1@localhost:27017/insurance",{useNewUrl
           console.log(error);
           console.log('Connection failed!');
         })
-app.use("/images", express.static(path.join("images")));
+app.use("/insurance-plan-images", express.static(path.join("insurance-plan-images")));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use((req,res,next) =>{
@@ -28,6 +29,7 @@ app.use((req,res,next) =>{
 app.use("/api/farmers",farmersRoutes);
 app.use('/api/farms',farmRoutes);
 app.use('/api/crops',cropRoutes);
+app.use('/api/insurance', insuranceRoutes);
 
 
 module.exports = app;

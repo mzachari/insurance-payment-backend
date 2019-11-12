@@ -1,20 +1,16 @@
-const Farm = require('../models/farm');
-exports.createFarmerFarm = (req, res, next) => {
+const Insurance = require('../models/insurance');
+exports.createFarmerInsurance = (req, res, next) => {
   console.log("req", req.body);
-  //const url = req.protocol + "://" + req.get("host");
-  const farm = new Farm({
-    cropType: req.body.cropType,
-    location: req.body.location,
+  const url = req.protocol + "://" + req.get("host");
+  const insurance = new Insurance({
     farmerId: req.userData.userId,
-    polygonPoints: req.body.polygonPoints,
-    startDate: req.body.startDate,
-    endDate: req.body.endDate,
-    area: req.body.area
+    isFormComplete: 1,
+    imagePath: url + "/insurance-plan-images/" + req.file.filename,
   });
-  farm.save().then(result => {
+  insurance.save().then(result => {
     res.status(201).json({
-      message: "Farm added successfully",
-      farm: {
+      message: "Insurance add step1 completed successfully",
+      insurance: {
         ...result,
         id: result._id
       }
@@ -23,28 +19,28 @@ exports.createFarmerFarm = (req, res, next) => {
     .catch((error) => {
       console.log(error);
       res.status(500).json({
-        message: "Couldn't add new farm!"
+        message: "Couldn't add new insurance!"
       })
     });
 };
-exports.getAllFarmerFarms = (req, res, next) =>
+exports.getAllFarmerInsurances = (req, res, next) =>
 {
-  farmsQuery = Farm.find()
-  .then(farms => {
+  insuranceQuery = Insurance.find()
+  .then(results => {
     res.status(200).json({
-      message: 'Farms fetched Successfully',
-      farms: farms,
-      farmerCount: farms.length
+      message: 'Insurances fetched Successfully',
+      insurances: results,
+      insurancesCount: results.length
     })
   })
   .catch(err =>{
       res.status(500).json({
-        message: "Couldn't fetch farms list!"
+        message: "Couldn't fetch Insurance list!"
     });
   })
 };
 
- exports.getFarmerFarm = (req, res, next) => {
+ exports.getFarmerInsurance = (req, res, next) => {
   // Post.findById(req.params.postId).then(post => {
   //   if (post) {
   //     res.status(200).json(post);
@@ -61,7 +57,7 @@ exports.getAllFarmerFarms = (req, res, next) =>
   //   });
 };
 
-exports.editFarmerFarm = (req, res, next) => {
+exports.editFarmerInsurance = (req, res, next) => {
   // let imagePath = req.body.imagePath;
   // if (req.file) {
   //   const url = req.protocol + "://" + req.get("host");
@@ -92,26 +88,7 @@ exports.editFarmerFarm = (req, res, next) => {
   // });
 };
 
-exports.deleteFarmerFarm = (req, res, next) => {
-  // Post.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(result => {
-  //   if (result.n > 0) {
-  //     res.status(200).json({
-  //       message: "Delete successful!",
-  //       post: result
-  //     });
-  //   } else {
-  //     res.status(401).json({
-  //       message: "Not Authorized!"
-  //     });
-  //   }
-  // }).catch((error) => {
-  //   res.status(500).json({
-  //     message: "Couldn't delete post!"
-  //   })
-  // });
-};
-
-exports.addFarmerFarm = (req, res, next) => {
+exports.deleteFarmerInsurance = (req, res, next) => {
   // Post.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(result => {
   //   if (result.n > 0) {
   //     res.status(200).json({

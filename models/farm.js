@@ -28,6 +28,9 @@ const farmSchema = mongoose.Schema({
   location: { type: String},
   farmerId: {type:String, required:true},
   cropType: {type:String, required:true},
+  area: {type: Number},
+  startDate: {type: Date},
+  endDate: {type: Date},
   insurancePlanId: {type:String},
   polygonPoints : polygonSchema 
 });
