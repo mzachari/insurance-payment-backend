@@ -29,8 +29,8 @@ exports.getAllFarmerInsurances = (req, res, next) =>
   .then(results => {
     res.status(200).json({
       message: 'Insurances fetched Successfully',
-      insurances: results,
-      insurancesCount: results.length
+      insuranceList: results,
+      insuranceCount: results.length
     })
   })
   .catch(err =>{
