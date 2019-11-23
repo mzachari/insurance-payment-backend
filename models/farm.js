@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const polygonSchema = new mongoose.Schema({
   type: {
@@ -26,6 +27,7 @@ const pointSchema = new mongoose.Schema({
 
 const farmSchema = mongoose.Schema({
   location: { type: String},
+  name: { type: String, unique: true},
   farmerId: {type:String, required:true},
   cropType: {type:String, required:true},
   area: {type: Number},
@@ -34,6 +36,7 @@ const farmSchema = mongoose.Schema({
   insurancePlanId: {type:String},
   polygonPoints : polygonSchema 
 });
+farmSchema.plugin(uniqueValidator);
 
 
 

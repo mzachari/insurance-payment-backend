@@ -31,5 +31,9 @@ app.use('/api/farms',farmRoutes);
 app.use('/api/crops',cropRoutes);
 app.use('/api/insurance', insuranceRoutes);
 
+app.get('/',(req, res,next)=> {
+  res.send("Welcome to insurance payment app");
+})
+
 
 module.exports = app;

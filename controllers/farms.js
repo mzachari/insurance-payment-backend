@@ -9,7 +9,8 @@ exports.createFarmerFarm = (req, res, next) => {
     polygonPoints: req.body.polygonPoints,
     startDate: req.body.startDate,
     endDate: req.body.endDate,
-    area: req.body.area
+    area: req.body.area,
+    name: req.body.name
   });
   farm.save().then(result => {
     res.status(201).json({

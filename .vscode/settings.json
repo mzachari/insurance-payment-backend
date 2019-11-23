@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/6d3638d8-8d6f-45c0-a1ad-268bbe9b2591/resourceGroups/icertis/providers/Microsoft.Web/sites/farm-easy",
+    "appService.deploySubpath": ""
+}

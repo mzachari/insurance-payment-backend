@@ -1,7 +1,63 @@
 const Insurance = require('../models/insurance');
+
+const async = require('async');
+const fs = require('fs');
+const path = require("path");
+const createReadStream = require('fs').createReadStream
+const sleep = require('util').promisify(setTimeout);
+const ComputerVisionClient = require('@azure/cognitiveservices-computervision').ComputerVisionClient;
+const ApiKeyCredentials = require('@azure/ms-rest-js').ApiKeyCredentials;
+
+let key = 'cec09bc0343d44af8ad167469126f30f';
+let endpoint = 'https://ocrengine.cognitiveservices.azure.com/';
+if (!key) { throw new Error('Set your environment variables for your subscription key and endpoint.'); }
+let computerVisionClient = new ComputerVisionClient(
+  new ApiKeyCredentials({inHeader: {'Ocp-Apim-Subscription-Key': key}}), endpoint);
+
+async function recognizeText(client, mode, url) {
+  // To recognize text in a local image, replace client.recognizeText() with recognizeTextInStream() as shown:
+  // result = await client.recognizeTextInStream(mode, () => createReadStream(localImagePath));
+  let result = await client.recognizeText(mode, url);
+  // Operation ID is last path segment of operationLocation (a URL)
+  let operation = result.operationLocation.split('/').slice(-1)[0];
+
+  // Wait for text recognition to complete
+  // result.status is initially undefined, since it's the result of recognizeText
+  while (result.status !== 'Succeeded') {result = await client.getTextOperationResult(operation); }
+  return result.recognitionResult;
+}
+
+function printRecText(ocr) {
+  var startingWord ="Signatory"
+  var retrievedRecords = {};
+  retrievedRecords[startingWord]=""
+  if (ocr.lines.length) {
+      console.log('Recognized text:');
+      for (let line of ocr.lines) {
+          var isStartingWordPresent = false;
+          for(let word of line.words){
+            if(isStartingWordPresent)
+            {
+              retrievedRecords[startingWord]=retrievedRecords[startingWord]+" "+word.text;
+            }
+            if(word.text==startingWord){
+                isStartingWordPresent = true;
+            }
+          }
+      }
+      retrievedRecords[startingWord]=retrievedRecords[startingWord].replace(":","").trim();
+      console.log(JSON.stringify(retrievedRecords))
+  }
+  else { console.log('No recognized text.'); }
+  return retrievedRecords;
+}
+
 exports.createFarmerInsurance = (req, res, next) => {
   console.log("req", req.body);
   const url = req.protocol + "://" + req.get("host");
+  const imgUrl = req.protocol + "://" + req.get("host") + "/insurance-plan-images/" + req.file.filename;
+  // const extractedInfo = await recognizeText(computerVisionClient, 'Handwritten', imgUrl);
+  // const insuranceDetails = printRecText(extractedInfo);
   const insurance = new Insurance({
     farmerId: req.userData.userId,
     isFormComplete: 1,
