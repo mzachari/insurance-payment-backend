@@ -1,0 +1,44 @@
+[
+    {
+    "farmer": "KV ZACHARIAS",
+    "year": 2019,
+    "State": "Andra Pradesh",
+    "District": "VISHAKHAPATNAM",
+    "Crop": "COTTON",
+    "SumInsured": 200000,
+    "fullPremium": 4000,
+    "Subsidy": 500,
+    "premiumRemitted": 3500,
+    "certificateNumber": "INS3381401986",
+    "startingDate": "09-24-2019",
+    "endDate": "03-03-2020"
+    },
+    {
+    "farmer": "KOSHY MATHEW",
+    "year": 2019,
+    "State": "Andra Pradesh",
+    "District": "GUNTUR",
+    "Crop": "RICE",
+    "SumInsured": 100000,
+    "fullPremium": 2000,
+    "Subsidy": null,
+    "premiumRemitted": 2000,
+    "certificateNumber": "INS9851772231",
+    "startingDate": "11-23-2019",
+    "endDate": "05-19-2020"
+    },
+    {
+    "farmer": "JOHAN P THOMAS",
+    "year": 2019,
+    "State": "Andra Pradesh",
+    "District": "NELLORE",
+    "Crop": "WHEAT",
+    "SumInsured": 200000,
+    "fullPremium": 5000,
+    "Subsidy": 250,
+    "premiumRemitted": 4750,
+    "certificateNumber": "INS1099173985",
+    "startingDate": "10-21-2019",
+    "endDate": "05-19-2020"
+    }
+    ]

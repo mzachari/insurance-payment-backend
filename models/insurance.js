@@ -23,7 +23,8 @@ const insuranceSchema = mongoose.Schema({
   insuranceProvider : {type:String,required:function() { return this.isFormComplete === 3; }}, // example ICICI Lombard Policy
   isFormComplete : {type:Number},
   farmerId: {type:String, required:true},
-  imagePath: {type:String}
+  imagePath: {type:String},
+  insuranceId: {type: String}
 
 });
 

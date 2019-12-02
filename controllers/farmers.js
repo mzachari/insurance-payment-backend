@@ -1,21 +1,61 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Farmer = require('../models/farmer');
+const fetch = require('node-fetch');
+const uuidv1 = require('uuid/v1');
+const axios = require('axios');
+const qs =  require('qs');
+
+const AUTHORITY = 'https://login.microsoftonline.com/theelderwandtechgmail.onmicrosoft.com';
+const WORKBENCH_API_URL = 'https://elderwand-7e32bo-api.azurewebsites.net';
+const RESOURCE = '81a86dbe-b0df-4058-853e-523927cccaf6';
+const CLIENT_APP_Id = '7ed6ca0e-da17-4e07-a088-80bfd50c377f';
+const CLIENT_SECRET = 'sropS+6zxXRZ0SICyfpZfATXJoR2ssdxS2hxP1IXL4I=';
+
+
+const acquireTokenWithClientCredentials = async (resource, clientId, clientSecret, authority) => {
+  const requestBody = {
+    resource: resource,
+    client_id: clientId,
+    client_secret: clientSecret,
+    grant_type: 'client_credentials'
+  };
+
+  const response = await axios({
+    method: 'POST',
+    url: `${authority}/oauth2/token`,
+    data: qs.stringify(requestBody),
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+  });
+
+  return response.data;
+}
 
 exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
     .then(hash => {
       console.log(req)
-      const farmer = new Farmer({
-        name: req.body.name,
-        contactNumber: req.body.contactNumber,
-        password: hash,
-        email: null,
-        imagePath: null,
-        state: null,
-        district: null
-      });
-      farmer.save()
+      var guid=uuidv1();
+      acquireTokenWithClientCredentials(RESOURCE, CLIENT_APP_Id, CLIENT_SECRET, AUTHORITY).then(
+        (token)=>{
+        //  console.log("token", token.access_token);
+          const body={"externalID":guid,"firstName":req.body.name,"lastName":req.body.contactNumber,"emailAddress":req.body.name+"@gmail.com"};
+          fetch("https://elderwand-7e32bo-api.azurewebsites.net/api/v1/users",{method:'POST',body:JSON.stringify(body),
+                headers: {"Content-Type":"application/json","Authorization":`Bearer ${token.access_token}`}}).then(respAzure=>respAzure.json)
+                .then(azureJson=>console.log(azureJson));
+
+        });
+      //console.log("token", token.access_token);
+        const farmer = new Farmer({
+          name: req.body.name,
+          contactNumber: req.body.contactNumber,
+          password: hash,
+          email: null,
+          imagePath: null,
+          state: null,
+          district: null
+        });
+        farmer.save()
         .then(result => {
           res.status(201).json({
             message: 'User Created',
