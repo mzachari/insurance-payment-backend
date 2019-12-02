@@ -10,8 +10,8 @@ const ComputerVisionClient = require("@azure/cognitiveservices-computervision")
   .ComputerVisionClient;
 const ApiKeyCredentials = require("@azure/ms-rest-js").ApiKeyCredentials;
 
-let key = "cec09bc0343d44af8ad167469126f30f";
-let endpoint = "https://ocrengine.cognitiveservices.azure.com/";
+let key = "d8b04ac164ca4e1faff9b59ff0a7687a";
+let endpoint = "https://extractinsurancedetails.cognitiveservices.azure.com/";
 if (!key) {
   throw new Error(
     "Set your environment variables for your subscription key and endpoint."
@@ -201,7 +201,7 @@ exports.editFarmerInsurance = (req, res, next) => {
     const url = req.protocol + "://" + req.get("host");
     imagePath = url + "/insurance-plan-images/" + req.file.filename;
   }
-  cvtext().then( () => {
+  cvtext(imagePath).then( () => {
     console.log("retrieved data", retrievedData);
     let insurance = new Insurance({
       _id: req.params.id,
