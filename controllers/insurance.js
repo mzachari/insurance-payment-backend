@@ -163,7 +163,7 @@ exports.createFarmerInsurance = (req, res, next) => {
   });
 };
 exports.getAllFarmerInsurances = (req, res, next) => {
-  insuranceQuery = Insurance.find()
+  insuranceQuery = Insurance.find({farmerId: req.userData.userId})
     .then(results => {
       res.status(200).json({
         message: "Insurances fetched Successfully",
@@ -221,7 +221,7 @@ exports.editFarmerInsurance = (req, res, next) => {
           _id: req.params.id
         });
     }
-  Insurance.updateOne({ _id: req.params.id}, insurance).then(result => {
+  Insurance.updateOne({ _id: req.params.id, farmerId: req.userData.userId}, insurance).then(result => {
     if (result.n > 0) {
       res.status(200).json({
         message: "Update successful!",
