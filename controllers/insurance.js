@@ -40,7 +40,7 @@ async function recognizeText(client, mode, url) {
 }
 
 async function cvtext(imagePath) {
-  const printedText = "https://i.ibb.co/w6bDF9s/test.jpg";
+  const printedText = imagePath;
   console.log(
     "Recognizing printed text...",
     printedText.split("/").pop()
