@@ -134,17 +134,26 @@ exports.createFarmerInsurance = (req, res, next) => {
     req.file.filename;
   cvtext(imgUrl).then(() => {
     console.log("retrieved data", retrievedData);
-    const insurance = new Insurance({
-      farmerId: req.userData.userId,
-      isFormComplete: 1,
-      premiumPercentage: retrievedData.premiumRemitted / retrievedData.SumInsured * 100,
-      insurancePlanNumber: retrievedData.certificateNumber,
-      insuranceStartDate: new Date(retrievedData.startingDate),
-      insuranceEndDate: new Date(retrievedData.endDate),
-      insuredAmount: retrievedData.SumInsured,
-      imagePath: url + "/insurance-plan-images/" + req.file.filename,
-      insuranceId: retrievedData.certificateNumber
-    });
+    if(isEmpty(retrievedData)){
+      const insurance = new Insurance({
+        farmerId: req.userData.userId,
+        isFormComplete: 1,
+        imagePath: url + "/insurance-plan-images/" + req.file.filename,
+      });
+    }
+    else{
+      const insurance = new Insurance({
+        farmerId: req.userData.userId,
+        isFormComplete: 1,
+        premiumPercentage: retrievedData.premiumRemitted / retrievedData.SumInsured * 100,
+        insurancePlanNumber: retrievedData.certificateNumber,
+        insuranceStartDate: new Date(retrievedData.startingDate),
+        insuranceEndDate: new Date(retrievedData.endDate),
+        insuredAmount: retrievedData.SumInsured,
+        imagePath: url + "/insurance-plan-images/" + req.file.filename,
+        insuranceId: retrievedData.certificateNumber
+      });
+    }
     insurance
       .save()
       .then(result => {
@@ -206,18 +215,29 @@ exports.editFarmerInsurance = (req, res, next) => {
   cvtext(imagePath).then(() => {
     let insurance;
     if (imagePath != null) {
-      insurance = new Insurance({
-        _id: req.params.id,
-        farmerId: req.userData.userId,
-        isFormComplete: 1,
-        premiumPercentage: retrievedData.premiumRemitted / retrievedData.SumInsured * 100,
-        insurancePlanNumber: retrievedData.certificateNumber,
-        insuranceStartDate: new Date(retrievedData.startingDate),
-        insuranceEndDate: new Date(retrievedData.endDate),
-        insuredAmount: retrievedData.SumInsured,
-        imagePath: imagePath,
-        insuranceId: retrievedData.certificateNumber
-      });
+        if(isEmpty(retrievedData)){
+          insurance = new Insurance({
+          _id: req.params.id,
+          farmerId: req.userData.userId,
+          isFormComplete: 1,
+          imagePath: imagePath,
+        });
+      }
+      else{
+        insurance = new Insurance({
+          _id: req.params.id,
+          farmerId: req.userData.userId,
+          isFormComplete: 1,
+          premiumPercentage: retrievedData.premiumRemitted / retrievedData.SumInsured * 100,
+          insurancePlanNumber: retrievedData.certificateNumber,
+          insuranceStartDate: new Date(retrievedData.startingDate),
+          insuranceEndDate: new Date(retrievedData.endDate),
+          insuredAmount: retrievedData.SumInsured,
+          imagePath: imagePath,
+          insuranceId: retrievedData.certificateNumber
+        });
+      }
+      
     }
     if (!req.file) {
       insurance = new Insurance({
@@ -244,6 +264,14 @@ exports.editFarmerInsurance = (req, res, next) => {
     });
   });
 };
+
+function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
 
 exports.deleteFarmerInsurance = (req, res, next) => {
   // Post.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(result => {
