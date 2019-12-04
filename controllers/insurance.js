@@ -40,19 +40,21 @@ async function recognizeText(client, mode, url) {
 }
 
 async function cvtext(imagePath) {
-  const printedText = imagePath;
-  console.log(
-    "Recognizing printed text...",
-    printedText.split("/").pop()
-  );
-  //Handwritten ,Printed
-  var printed = await recognizeText(
-    computerVisionClient,
-    "Handwritten",
-    printedText
-  );
-  printRecText(printed);
+  if (imagePath != null) {
+    const printedText = imagePath;
+    console.log(
+      "Recognizing printed text...",
+      printedText.split("/").pop()
+    );
+    //Handwritten ,Printed
+    var printed = await recognizeText(
+      computerVisionClient,
+      "Handwritten",
+      printedText
+    );
+    printRecText(printed);
   }
+}
 
 // async function computerVision() {
 //   async.series(
@@ -109,15 +111,15 @@ function printRecText(ocr) {
     console.log("No recognized text.");
   }
   //return retrievedRecords;
-  var output = data.filter(function (el){
+  var output = data.filter(function (el) {
     return el.farmer == retrievedRecords[startingWord]
   })
   console.log(output);
-  if(output.length==1){
-    retrievedData=output[0];
+  if (output.length == 1) {
+    retrievedData = output[0];
   }
-  else{
-    retrievedRecords={}
+  else {
+    retrievedRecords = {}
   }
 }
 
@@ -130,12 +132,12 @@ exports.createFarmerInsurance = (req, res, next) => {
     req.get("host") +
     "/insurance-plan-images/" +
     req.file.filename;
-  cvtext(imgUrl).then( () => {
+  cvtext(imgUrl).then(() => {
     console.log("retrieved data", retrievedData);
     const insurance = new Insurance({
       farmerId: req.userData.userId,
       isFormComplete: 1,
-      premiumPercentage: retrievedData.premiumRemitted/retrievedData.SumInsured *100,
+      premiumPercentage: retrievedData.premiumRemitted / retrievedData.SumInsured * 100,
       insurancePlanNumber: retrievedData.certificateNumber,
       insuranceStartDate: new Date(retrievedData.startingDate),
       insuranceEndDate: new Date(retrievedData.endDate),
@@ -163,7 +165,7 @@ exports.createFarmerInsurance = (req, res, next) => {
   });
 };
 exports.getAllFarmerInsurances = (req, res, next) => {
-  insuranceQuery = Insurance.find({farmerId: req.userData.userId})
+  insuranceQuery = Insurance.find({ farmerId: req.userData.userId })
     .then(results => {
       res.status(200).json({
         message: "Insurances fetched Successfully",
@@ -201,44 +203,46 @@ exports.editFarmerInsurance = (req, res, next) => {
     const url = req.protocol + "://" + req.get("host");
     imagePath = url + "/insurance-plan-images/" + req.file.filename;
   }
-  cvtext(imagePath).then( () => {
-    console.log("retrieved data", retrievedData);
-    let insurance = new Insurance({
-      _id: req.params.id,
-      farmerId: req.userData.userId,
-      isFormComplete: 1,
-      premiumPercentage: retrievedData.premiumRemitted/retrievedData.SumInsured *100,
-      insurancePlanNumber: retrievedData.certificateNumber,
-      insuranceStartDate: new Date(retrievedData.startingDate),
-      insuranceEndDate: new Date(retrievedData.endDate),
-      insuredAmount: retrievedData.SumInsured,
-      imagePath: imagePath,
-      insuranceId: retrievedData.certificateNumber
-    });
-    if(!req.file) {
-        insurance = new Insurance({
-          ...req.body,
-          _id: req.params.id
+  cvtext(imagePath).then(() => {
+    let insurance;
+    if (imagePath != null) {
+      insurance = new Insurance({
+        _id: req.params.id,
+        farmerId: req.userData.userId,
+        isFormComplete: 1,
+        premiumPercentage: retrievedData.premiumRemitted / retrievedData.SumInsured * 100,
+        insurancePlanNumber: retrievedData.certificateNumber,
+        insuranceStartDate: new Date(retrievedData.startingDate),
+        insuranceEndDate: new Date(retrievedData.endDate),
+        insuredAmount: retrievedData.SumInsured,
+        imagePath: imagePath,
+        insuranceId: retrievedData.certificateNumber
+      });
+    }
+    if (!req.file) {
+      insurance = new Insurance({
+        ...req.body,
+        _id: req.params.id
+      });
+    }
+    Insurance.updateOne({ _id: req.params.id, farmerId: req.userData.userId }, insurance).then(result => {
+      if (result.n > 0) {
+        res.status(200).json({
+          message: "Update successful!",
+          insurance: result
         });
-    }
-  Insurance.updateOne({ _id: req.params.id, farmerId: req.userData.userId}, insurance).then(result => {
-    if (result.n > 0) {
-      res.status(200).json({
-        message: "Update successful!",
-        insurance: result
-      });
-    } else {
-      res.status(401).json({
-        message: "Not Authorized!"
-      });
-    }
-  }).catch((error) => {
-    console.log(error);
-    res.status(500).json({
-      message: "Couldn't update insurance!"
-    })
+      } else {
+        res.status(401).json({
+          message: "Not Authorized!"
+        });
+      }
+    }).catch((error) => {
+      console.log(error);
+      res.status(500).json({
+        message: "Couldn't update insurance!"
+      })
+    });
   });
-});
 };
 
 exports.deleteFarmerInsurance = (req, res, next) => {
