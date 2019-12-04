@@ -30,7 +30,7 @@ exports.createFarmerFarm = (req, res, next) => {
 };
 exports.getAllFarmerFarms = (req, res, next) =>
 {
-  farmsQuery = Farm.find()
+  farmsQuery = Farm.find({farmerId: req.userData.userId})
   .then(farms => {
     res.status(200).json({
       message: 'Farms fetched Successfully',
