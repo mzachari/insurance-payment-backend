@@ -41,8 +41,8 @@ exports.createUser = (req, res, next) => {
         //  console.log("token", token.access_token);
           const body={"externalID":guid,"firstName":req.body.name,"lastName":req.body.contactNumber,"emailAddress":req.body.name+"@gmail.com"};
           fetch("https://elderwand-7e32bo-api.azurewebsites.net/api/v1/users",{method:'POST',body:JSON.stringify(body),
-                headers: {"Content-Type":"application/json","Authorization":`Bearer ${token.access_token}`}}).then(respAzure=>respAzure.json)
-                .then(azureJson=>console.log(azureJson));
+                headers: {"Content-Type":"application/json","Authorization":`Bearer ${token.access_token}`}}).then(respAzure=>console.log("azure1",respAzure))
+                .then(azureJson=>console.log("azure",JSON.stringify(azureJson)));
 
         });
       //console.log("token", token.access_token);

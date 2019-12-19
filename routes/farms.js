@@ -7,7 +7,7 @@ const checkAuth = require('../middleware/check-auth');
 
 router.post('', checkAuth, farmsController.createFarmerFarm);
 router.get('', checkAuth,farmsController.getAllFarmerFarms );
-
+router.get('/all', farmsController.getAllFarms);
 router.get('/:farmId', checkAuth,farmsController.getFarmerFarm)
 router.put('/:farmid', checkAuth, farmsController.editFarmerFarm );
 router.delete('/:farmid', checkAuth, farmsController.deleteFarmerFarm );

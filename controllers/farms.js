@@ -45,6 +45,23 @@ exports.getAllFarmerFarms = (req, res, next) =>
   })
 };
 
+exports.getAllFarms = (req, res, next) =>
+{
+  farmsQuery = Farm.find()
+  .then(farms => {
+    res.status(200).json({
+      message: 'Farms fetched Successfully',
+      farms: farms,
+      farmCount: farms.length
+    })
+  })
+  .catch(err =>{
+      res.status(500).json({
+        message: "Couldn't fetch farms list!"
+    });
+  })
+};
+
  exports.getFarmerFarm = (req, res, next) => {
   // Post.findById(req.params.postId).then(post => {
   //   if (post) {
