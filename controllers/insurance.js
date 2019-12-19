@@ -291,3 +291,26 @@ exports.deleteFarmerInsurance = (req, res, next) => {
   //   })
   // });
 };
+
+exports.submitFarmerInsurance = (req,res,next)=>{
+
+  let insurance = new Insurance(req.body);
+  Insurance.updateOne({ _id: req.params.id, farmerId: req.userData.userId }, insurance).then(result => {
+    if (result.n > 0) {
+      res.status(200).json({
+        message: "Update successful!",
+        insurance: result
+      });
+    } else {
+      res.status(401).json({
+        message: "Not Authorized!"
+      });
+    }
+  }).catch((error) => {
+    console.log(error);
+    res.status(500).json({
+      message: "Couldn't update insurance!"
+    })
+  });
+  
+}

@@ -7,6 +7,8 @@ const farmRoutes = require('./routes/farms');
 const cropRoutes = require('./routes/crops');
 const insuranceRoutes = require('./routes/insurance');
 
+var socket = require('socket.io-client')('http://localhost:8888',{ query: "points=[ [ 12.910869789073772, 77.59626583204385 ], [ 12.910671094624115, 77.59627119646188 ], [ 12.910739069058868, 77.59634898052332 ] ]"});
+
 const app = express();
 mongoose.connect("mongodb://admin:Welcome1@ds343718.mlab.com:43718/insurance-payment",{useNewUrlParser: true})
         .then(() =>{
@@ -33,6 +35,15 @@ app.use('/api/insurance', insuranceRoutes);
 
 app.get('/',(req, res,next)=> {
   res.send("Welcome to insurance payment app");
+})
+
+
+socket.on('connect', function(){
+  console.log("connected to the socket at 8888")
+});
+
+socket.on('temperature', function (value) {
+  console.log(value);
 })
 
 
