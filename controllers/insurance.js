@@ -13,17 +13,17 @@ const request = require("request");
 var contractId = 0;
 
 const authToken =
-  "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InBpVmxsb1FEU01LeGgxbTJ5Z3FHU1ZkZ0ZwQSIsImtpZCI6InBpVmxsb1FEU01LeGgxbTJ5Z3FHU1ZkZ0ZwQSJ9.eyJhdWQiOiI4MWE4NmRiZS1iMGRmLTQwNTgtODUzZS01MjM5MjdjY2NhZjYiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC83ODg4MzJjZS04OGU1LTQ1N2QtODBhMi0yYzZkMmM4YzQzM2IvIiwiaWF0IjoxNTc2NzgwMjgzLCJuYmYiOjE1NzY3ODAyODMsImV4cCI6MTU3Njc4NDE4MywiYWlvIjoiQVZRQXEvOE5BQUFBV2NwVXIwOERnUUdjUXJoWER1VGF0cG1KWkh1cjgyWjZZSy9Xc2wzUFVveTkvclE4dy9mZVZnSmxabmgzVE9LN1owZTVVME41RENPUGFnTGFJTENHL1hPZHZaSUh3VWZvSXJPYmprMW8xSDg9IiwiYW1yIjpbInB3ZCJdLCJjX2hhc2giOiJHWU1ZNXgxRUcyY0NqaU9Jbmp5bndnIiwiZW1haWwiOiJ0aGUuZWxkZXIud2FuZC50ZWNoQGdtYWlsLmNvbSIsImZhbWlseV9uYW1lIjoiWmFjaGFyaWEiLCJnaXZlbl9uYW1lIjoiTWFyaWEiLCJpZHAiOiJsaXZlLmNvbSIsImlwYWRkciI6IjE1Ny40NS4yMTAuMTc1IiwibmFtZSI6Ik1hcmlhIFphY2hhcmlhIiwibm9uY2UiOiI2NGMzZDdjNC05MWUwLTRiZTAtYmVmNi1hNjAxM2Q3MGM4ZGQiLCJvaWQiOiIyY2E1NTgxYS05ZTM3LTQ1MzgtYjUxOC1jYjExZGFjMWJhMWEiLCJyb2xlcyI6WyJBZG1pbmlzdHJhdG9yIl0sInN1YiI6IlEyMkF5XzkyTGloM3FjZnJUcnNSS2ZQd3U2MDBBRWctT0tBOUxkUDVfM1kiLCJ0aWQiOiI3ODg4MzJjZS04OGU1LTQ1N2QtODBhMi0yYzZkMmM4YzQzM2IiLCJ1bmlxdWVfbmFtZSI6ImxpdmUuY29tI3RoZS5lbGRlci53YW5kLnRlY2hAZ21haWwuY29tIiwidXRpIjoiMi1jQldkbzNpVWlUYU9uTGFFUXhBQSIsInZlciI6IjEuMCJ9.kWoZM5yL6SqHrMOHED1bLkgpCEM8Ep7wyaW5nFFAvkifh0Tkh_es9306bLXytrWE56reB4FXgJeBuVQLe3z35NbCdXviTILiJKpjhAuCphbUMlsjumeaNvzYYy68FH6awgQ9KzAn4-2nWGkBMVCSHHRXpa1Y3YPc-UMpH-qT8RQlzxh-0jTpy47NvAxIl2z-eR9YIjKmrd9A94lJY9ghU0FEYcyP_Ksg9nteGqTIcy2jmaBAvzDPfTyxSOMKZkoHW3l_Codl7JqUYfI2n6jtncvIZqxdOA3u1RSByTV8dgdl143staOYs_sWMN66FoOMSTuGfPbhfXDXPMuzSqYDHQ";
+  "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6InBpVmxsb1FEU01LeGgxbTJ5Z3FHU1ZkZ0ZwQSIsImtpZCI6InBpVmxsb1FEU01LeGgxbTJ5Z3FHU1ZkZ0ZwQSJ9.eyJhdWQiOiI4MWE4NmRiZS1iMGRmLTQwNTgtODUzZS01MjM5MjdjY2NhZjYiLCJpc3MiOiJodHRwczovL3N0cy53aW5kb3dzLm5ldC83ODg4MzJjZS04OGU1LTQ1N2QtODBhMi0yYzZkMmM4YzQzM2IvIiwiaWF0IjoxNTc2NzgzNTg0LCJuYmYiOjE1NzY3ODM1ODQsImV4cCI6MTU3Njc4NzQ4NCwiYWlvIjoiQVZRQXEvOE5BQUFBcWFXS09RM0diSVExdXp5bFhEY09wcFN4UHNmdFJXVGRVZC8rSmI1SVByUTJtc29vOTJDQlhvK1JwTDNWVUZnK2pxK2JSM1ppVXB5WWZzczRjN04vK3ZYb3poYXNaMmNuS1Q0MnppZ3lYNlE9IiwiYW1yIjpbInB3ZCJdLCJlbWFpbCI6InRoZS5lbGRlci53YW5kLnRlY2hAZ21haWwuY29tIiwiZmFtaWx5X25hbWUiOiJaYWNoYXJpYSIsImdpdmVuX25hbWUiOiJNYXJpYSIsImlkcCI6ImxpdmUuY29tIiwiaXBhZGRyIjoiMTU3LjQ1LjIxMC4xNzUiLCJuYW1lIjoiTWFyaWEgWmFjaGFyaWEiLCJub25jZSI6ImEwN2NlOTJkLTI4NmMtNDYzMy04NmUyLTA3Zjk5ZTBmOWUwMiIsIm9pZCI6IjJjYTU1ODFhLTllMzctNDUzOC1iNTE4LWNiMTFkYWMxYmExYSIsInJvbGVzIjpbIkFkbWluaXN0cmF0b3IiXSwic3ViIjoiUTIyQXlfOTJMaWgzcWNmclRyc1JLZlB3dTYwMEFFZy1PS0E5TGRQNV8zWSIsInRpZCI6Ijc4ODgzMmNlLTg4ZTUtNDU3ZC04MGEyLTJjNmQyYzhjNDMzYiIsInVuaXF1ZV9uYW1lIjoibGl2ZS5jb20jdGhlLmVsZGVyLndhbmQudGVjaEBnbWFpbC5jb20iLCJ1dGkiOiJrN0cxVEVWRXlFNlNla3RieWdvdEFBIiwidmVyIjoiMS4wIn0.xYnwT4N4YLBHSOSFU2sa69mAp8NDHSMUHF_XP9DFUCqiYjNpl0rmGxKw6RevScpixKG9SROtbUjbZM3nIukDOwftvbseHX6p341z8dWTmtBDETZUaPONyYzvKGQt_n9ca1A6ReVJlNv0uTy90NVTFJc5t7azdLtPg2TYeZH57T6k_DGosVKvS-L5yoXDvHVyIHDPiDZyIDB5oCkVGcuqU-Ur1tf9chWgaYE3a_48Eahyb48m9Qvy-RRivmtZq7yLB4VZByA5p0W5TqfSQtWm2iaNLaNit-fPjmI_51S94PcxCFzTg-plg1tt6KRz4ysZM96YWLI2MgY50v9ttsVVMw";
 const ComputerVisionClient = require("@azure/cognitiveservices-computervision")
   .ComputerVisionClient;
 const ApiKeyCredentials = require("@azure/ms-rest-js").ApiKeyCredentials;
 
 const AUTHORITY =
-  "https://login.microsoftonline.com/theelderwandtechgmail.onmicrosoft.com";
+  "https://login.microsoftonline.com/788832ce-88e5-457d-80a2-2c6d2c8c433b";
 const WORKBENCH_API_URL = "https://elderwand-7e32bo-api.azurewebsites.net";
 const RESOURCE = "81a86dbe-b0df-4058-853e-523927cccaf6";
-const CLIENT_APP_Id = "7ed6ca0e-da17-4e07-a088-80bfd50c377f";
-const CLIENT_SECRET = "sropS+6zxXRZ0SICyfpZfATXJoR2ssdxS2hxP1IXL4I=";
+const CLIENT_APP_Id = "d8f438f3-2ef9-4069-8930-4d54f34fc083";
+const CLIENT_SECRET = "TD4NPh57KOGSMaCmO0lRiw=JGX/zc-[k";
 
 let key = "d8b04ac164ca4e1faff9b59ff0a7687a";
 let endpoint = "https://extractinsurancedetails.cognitiveservices.azure.com/";
@@ -395,7 +395,7 @@ exports.submitFarmerInsurance = (req, res, next) => {
                 CLIENT_SECRET,
                 AUTHORITY
               ).then(token => {
-                // console.log("token", 'Bearer ' + token.access_token);
+                console.log("token", 'Bearer ' + token.access_token);
                 const body = {
                   workflowActionParameters: [
                     {
@@ -499,7 +499,7 @@ exports.submitFarmerInsurance = (req, res, next) => {
         CLIENT_SECRET,
         AUTHORITY
       ).then(token => {
-        // console.log("token", 'Bearer ' + token.access_token);
+         console.log("token", 'Bearer ' + token.access_token);
         const body = {
           workflowFunctionId: 33,
           workflowActionParameters: [
