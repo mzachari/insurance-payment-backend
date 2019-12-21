@@ -25,8 +25,8 @@ const RESOURCE = "81a86dbe-b0df-4058-853e-523927cccaf6";
 const CLIENT_APP_Id = "d8f438f3-2ef9-4069-8930-4d54f34fc083";
 const CLIENT_SECRET = "TD4NPh57KOGSMaCmO0lRiw=JGX/zc-[k";
 
-let key = "d8b04ac164ca4e1faff9b59ff0a7687a";
-let endpoint = "https://extractinsurancedetails.cognitiveservices.azure.com/";
+let key = "c91186fe89e84bd0a1f97a17d625d450";
+let endpoint = "https://elderwandocr.cognitiveservices.azure.com/";
 if (!key) {
   throw new Error(
     "Set your environment variables for your subscription key and endpoint."
@@ -173,15 +173,16 @@ exports.createFarmerInsurance = (req, res, next) => {
     "/insurance-plan-images/" +
     req.file.filename;
   cvtext(imgUrl).then(() => {
+    var insurance;
     console.log("retrieved data", retrievedData);
     if (isEmpty(retrievedData)) {
-      const insurance = new Insurance({
+      insurance = new Insurance({
         farmerId: req.userData.userId,
         isFormComplete: 1,
         imagePath: url + "/insurance-plan-images/" + req.file.filename
       });
     } else {
-      const insurance = new Insurance({
+      insurance = new Insurance({
         farmerId: req.userData.userId,
         isFormComplete: 1,
         premiumPercentage:
