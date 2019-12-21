@@ -78,15 +78,21 @@ async function recognizeText(client, mode, url) {
 }
 
 async function cvtext(imagePath) {
+  console.log("reached here", imagePath);
   if (imagePath != null) {
-    const printedText = imagePath;
+    const printedText = "http://13.68.181.244:3000/insurance-plan-images/insurance-plan-doc-1576909315092.jpg";
     console.log("Recognizing printed text...", printedText.split("/").pop());
     //Handwritten ,Printed
+    try {
     var printed = await recognizeText(
       computerVisionClient,
       "Handwritten",
       printedText
     );
+    }
+    catch(error) {
+      console.log("error!!", error);
+    }
     printRecText(printed);
   }
 }
