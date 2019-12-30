@@ -13,5 +13,5 @@ router.get('/:id',checkAuth,insuranceController.getFarmerInsurance);
 router.put('/:id', checkAuth, extractFile, insuranceController.editFarmerInsurance );
 // router.delete('/:farmid', checkAuth, farmsController.deleteFarmerFarm );
 router.post('/:id/submit',checkAuth,insuranceController.submitFarmerInsurance);
-
+router.post('/takePolicy',checkAuth,insuranceController.addInsurance)
 module.exports = router; 

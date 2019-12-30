@@ -10,10 +10,11 @@ const insurancePlanSchema = mongoose.Schema({
   policyName : {type:String,required:true}, // Example ICICI Lombard
   termsAndConditions : {type:String},
   minimumAmount :{type:Number,required:true},
-  redeemConditions:[redeemConditionsSchema]
+  redeemConditions:[redeemConditionsSchema],
+  providerId: {type: String, required: true}
 
 });
 
 
 
-module.exports = mongoose.model('insurance',insurancePlanSchema);
+module.exports = mongoose.model('insurancePlanSchema',insurancePlanSchema);

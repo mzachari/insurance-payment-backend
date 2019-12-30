@@ -19,6 +19,7 @@ const insuranceSchema = mongoose.Schema({
   insuranceStartDate : { type : Date ,required:function() { return this.isFormComplete === 3; }},
   insuranceEndDate : { type : Date ,required:function() { return this.isFormComplete === 3; }},
   farmId : {type:String},
+  cropName: {type: String},
   insuredLocation : polygonSchema,
   insuranceProvider : {type:String,required:function() { return this.isFormComplete === 3; }}, // example ICICI Lombard Policy
   isFormComplete : {type:Number},

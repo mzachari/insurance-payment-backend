@@ -6,6 +6,9 @@ const farmersRoutes = require('./routes/farmers');
 const farmRoutes = require('./routes/farms');
 const cropRoutes = require('./routes/crops');
 const insuranceRoutes = require('./routes/insurance');
+const insuranceProviderRoutes = require('./routes/insuranceProvider');
+const policyRoutes = require('./routes/insurancePlan');
+
 
 
 const app = express();
@@ -27,11 +30,12 @@ app.use((req,res,next) =>{
   next();
 })
 
-app.use("/api/farmers",farmersRoutes);
+app.use("/api/farmer",farmersRoutes);
 app.use('/api/farms',farmRoutes);
 app.use('/api/crops',cropRoutes);
 app.use('/api/insurance', insuranceRoutes);
-
+app.use('/api/insuranceProvider', insuranceProviderRoutes);
+app.use('/api/policy', policyRoutes);
 app.get('/',(req, res,next)=> {
   res.send("Welcome to insurance payment app");
 })
